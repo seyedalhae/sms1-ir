@@ -1,8 +1,5 @@
-import express, { Request, Response } from "express";
 require("dotenv").config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
 const apiKeyWithoutPattern = process.env.API_KEY_WITHOUT_PATTERN;
 const apiKeyWithPattern = process.env.API_KEY_WITH_PATTERN;
 const sampleMobile = process.env.SAMPLE_MOBILE;
@@ -92,11 +89,36 @@ export class Sms1ir {
 		}
 	}
 
-	async sendVerificationCode(verificationCode: string, recipient: string) {
+	async sendVerificationCode(
+		verificationCode: string,
+		recipient: string,
+		patternId: number
+	) {
 		const message = `Your verification code is: ${verificationCode}`;
 		try {
-			const responseBody = await this.sendWithRetry(message, recipient);
-			return responseBody;
+			// First, send the verification code with retry
+			// const retryResponse = await this.sendWithRetry(message, recipient);
+			// console.log("retryResponse: ", retryResponse);
+
+			// if (retryResponse.status !== 200 && patternId) {
+			const sendWithPattern = await this.sendWithPattern(
+				patternId,
+				recipient,
+				{
+					otpCode: verificationCode,
+				}
+			);
+			// }
+
+			// Next, send the verification code with pattern
+			// const patternResponse = await this.sendWithPattern(
+			// 	patternId,
+			// 	recipient,
+			// 	{ verificationCode }
+			// );
+
+			// Return the responses
+			return sendWithPattern;
 		} catch (error) {
 			console.error("Error sending verification code:", error);
 			throw new Error("Failed to send verification code");
@@ -155,33 +177,4 @@ export class Sms1ir {
 	}
 }
 
-// app.use(express.json());
-
-app.post("/sms", async (req: Request, res: Response) => {
-	try {
-		const payload = req.body;
-		console.log("payload: ", payload);
-
-		const sms = new Sms1ir(apiKeyWithoutPattern!, apiKeyWithPattern!);
-		// const sms1 = await sms.send("Hello World!", sampleMobile3!);
-		// const sms1 = await sms.bulkSend("Hello World!", [
-		// 	sampleMobile!,
-		// 	sampleMobile2!,
-		// 	sampleMobile3!,
-		// ]);
-		// const sms1 = await sms.sendVerificationCode("12323", sampleMobile!);
-		// const sms1 = await sms.sendVerificationCode("123321", sampleMobile!);
-		const sms1 = await sms.sendWithPattern(125, "09105660150", {
-			otpCode: "987654",
-		});
-
-		res.json({ response: sms1 });
-	} catch (error) {
-		console.error("Error in /users route:", error);
-		res.status(500).json({ error: "Failed to process request" });
-	}
-});
-
-app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`);
-});
+export default Sms1ir;
