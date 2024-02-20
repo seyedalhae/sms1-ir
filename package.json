@@ -1,6 +1,6 @@
 {
 	"name": "sms1-ir",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "SMS1.ir API client for JS/TS/ESM/Node.js",
 	"main": "index.js",
 	"keywords": [
