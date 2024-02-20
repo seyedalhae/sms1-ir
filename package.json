@@ -1,6 +1,6 @@
 {
 	"name": "sms1-ir",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "SMS1.ir API client for JS/TS/ESM/Node.js",
 	"main": "index.js",
 	"keywords": [
@@ -39,7 +39,7 @@
 		"build": "tsc"
 	},
 	"devDependencies": {
-		"typescript": "^5.3.3",
-		"ts-node-dev": "^2.0.0"
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.3.3"
 	}
 }
