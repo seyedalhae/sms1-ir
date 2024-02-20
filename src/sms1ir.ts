@@ -1,28 +1,59 @@
-require("dotenv").config();
-
-const apiKeyWithoutPattern = process.env.API_KEY_WITHOUT_PATTERN;
-const apiKeyWithPattern = process.env.API_KEY_WITH_PATTERN;
-const sampleMobile = process.env.SAMPLE_MOBILE;
-const sampleMobile2 = process.env.SAMPLE_MOBILE2;
-const sampleMobile3 = process.env.SAMPLE_MOBILE3;
-
+/**
+ * Represents the structure of the response data from the API.
+ */
 interface IData {
 	status: number;
 	message?: string;
 	data?: any;
 }
 
+/**
+ * Represents a class for interacting with the SMS1.ir API.
+ */
 export class Sms1ir {
+	/**
+	 * The API key used for requests without a pattern.
+	 */
 	private apiKeyWithoutPattern: string;
+
+	/**
+	 * The API key used for requests with a pattern.
+	 */
 	private apiKeyWithPattern: string | null;
+
+	/**
+	 * The base URL of the SMS1.ir API.
+	 */
 	private apiUrl: string = "https://app.sms1.ir:7001/api/service/";
+
+	/**
+	 * The maximum number of retries for sending SMS messages.
+	 */
 	private maxRetries: number = 3;
+
+	/**
+	 * The interval between retry attempts in milliseconds.
+	 */
 	private retryInterval: number = 1000;
+
+	/**
+	 * Constructs a new Sms1ir instance.
+	 * @param apiKeyWithoutPattern The API key used for requests without a pattern.
+	 * @param apiKeyWithPattern The API key used for requests with a pattern.
+	 */
 	constructor(apiKeyWithoutPattern: string, apiKeyWithPattern?: string) {
 		this.apiKeyWithoutPattern = apiKeyWithoutPattern;
 		this.apiKeyWithPattern = apiKeyWithPattern ?? null;
 	}
 
+	/**
+	 * Makes a request to the SMS1.ir API.
+	 * @param urlSuffix The endpoint suffix for the API URL.
+	 * @param method The HTTP method for the request.
+	 * @param data The data to be sent with the request.
+	 * @param usePatternApiKey Specifies whether to use the API key for requests with a pattern.
+	 * @returns A promise that resolves with the API response data.
+	 */
 	private async Api(
 		urlSuffix: string,
 		method: "GET" | "POST" | "DELETE" = "POST",
@@ -64,6 +95,12 @@ export class Sms1ir {
 		}
 	}
 
+	/**
+	 * Sends a standard SMS message.
+	 * @param message The message content.
+	 * @param recipient The recipient's phone number.
+	 * @returns A promise that resolves with the API response data.
+	 */
 	async send(message: string, recipient: string) {
 		try {
 			const responseBody = await this.Api("send", "POST", {
@@ -77,18 +114,13 @@ export class Sms1ir {
 		}
 	}
 
-	async bulkSend(message: string, recipient: string[]) {
-		try {
-			const responses = await Promise.all(
-				recipient.map((el) => this.send(message, el))
-			);
-			return responses;
-		} catch (error) {
-			console.error("Error sending bulk SMS:", error);
-			throw new Error("Failed to send bulk SMS");
-		}
-	}
-
+	/**
+	 * Sends a verification code SMS message with retry and pattern support.
+	 * @param verificationCode The verification code to send.
+	 * @param recipient The recipient's phone number.
+	 * @param patternId The ID of the pattern to use for the SMS.
+	 * @returns A promise that resolves with the API response data.
+	 */
 	async sendVerificationCode(
 		verificationCode: string,
 		recipient: string,
@@ -96,11 +128,6 @@ export class Sms1ir {
 	) {
 		const message = `Your verification code is: ${verificationCode}`;
 		try {
-			// First, send the verification code with retry
-			// const retryResponse = await this.sendWithRetry(message, recipient);
-			// console.log("retryResponse: ", retryResponse);
-
-			// if (retryResponse.status !== 200 && patternId) {
 			const sendWithPattern = await this.sendWithPattern(
 				patternId,
 				recipient,
@@ -108,16 +135,6 @@ export class Sms1ir {
 					otpCode: verificationCode,
 				}
 			);
-			// }
-
-			// Next, send the verification code with pattern
-			// const patternResponse = await this.sendWithPattern(
-			// 	patternId,
-			// 	recipient,
-			// 	{ verificationCode }
-			// );
-
-			// Return the responses
 			return sendWithPattern;
 		} catch (error) {
 			console.error("Error sending verification code:", error);
@@ -125,6 +142,13 @@ export class Sms1ir {
 		}
 	}
 
+	/**
+	 * Sends an SMS message using a predefined pattern.
+	 * @param patternId The ID of the pattern to use for the SMS.
+	 * @param recipient The recipient's phone number.
+	 * @param pairs The key-value pairs to replace in the pattern.
+	 * @returns A promise that resolves with the API response data.
+	 */
 	async sendWithPattern(patternId: number, recipient: string, pairs: any) {
 		try {
 			const responseBody = await this.Api(
@@ -144,6 +168,13 @@ export class Sms1ir {
 		}
 	}
 
+	/**
+	 * Sends an SMS message with retry support.
+	 * @param message The message content.
+	 * @param recipient The recipient's phone number.
+	 * @param retries The number of retry attempts.
+	 * @returns A promise that resolves with the API response data.
+	 */
 	private async sendWithRetry(
 		message: string,
 		recipient: string,
@@ -177,4 +208,5 @@ export class Sms1ir {
 	}
 }
 
+// Export the Sms1ir class as the default export
 export default Sms1ir;
