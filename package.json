@@ -11,9 +11,17 @@
 		"typescript": "^5.3.3"
 	},
 	"name": "sms1-ir-node",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"main": "index.js",
-	"repository": "https://github.com/seyedalhae/sms1-ir-node.git",
+	"keywords": [
+		"sms1",
+		"otp",
+		"message"
+	],
+	"repository": {
+		"url": "https://github.com/seyedalhae/sms1-ir-node.git",
+		"type": "git"
+	},
 	"author": "Alireza <seyedalhae@gmail.com>",
 	"license": "MIT",
 	"devDependencies": {
