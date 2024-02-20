@@ -1,57 +1,39 @@
-# Sms1ir Documentation
+# SMS1.ir API
 
-## IData Interface
+`sms1-ir` allows you to communicate with the SMS1.ir API to send SMS messages. The API key for your SMS1.ir accounts is required to create a new instance of the sms1ir class.
 
-Represents the structure of the response data from the API.
+## Installation
 
-```typescript
-interface IData {
-    status: number;
-    message?: string;
-    data?: any;
-}
-Sms1ir Class
-Represents a class for interacting with the SMS1.ir API.
+This package is available on npm as [`sms1-ir`](https://www.npmjs.com/package/sms1-ir). You can install it using either npm or yarn.
 
-Constructor
-Constructs a new Sms1ir instance.
+With npm:
 
-Parameters
-apiKeyWithoutPattern: The API key used for requests without a pattern.
-apiKeyWithPattern: The API key used for requests with a pattern (optional).
-Properties
-apiKeyWithoutPattern: Private property for the API key used for requests without a pattern.
-apiKeyWithPattern: Private property for the API key used for requests with a pattern.
-apiUrl: The base URL of the SMS1.ir API.
-maxRetries: The maximum number of retries for sending SMS messages.
-retryInterval: The interval between retry attempts in milliseconds.
-Methods
-send(message: string, recipient: string): Promise<IData>
-Sends a standard SMS message.
+```bash
+npm install sms1-ir
+```
 
-message: The message content.
-recipient: The recipient's phone number.
-Returns a promise that resolves with the API response data.
-sendVerificationCode(verificationCode: string, recipient: string, patternId: number): Promise<IData>
-Sends a verification code SMS message with retry and pattern support.
+With yarn:
 
-verificationCode: The verification code to send.
-recipient: The recipient's phone number.
-patternId: The ID of the pattern to use for the SMS.
-Returns a promise that resolves with the API response data.
-sendWithPattern(patternId: number, recipient: string, pairs: any): Promise<IData>
-Sends an SMS message using a predefined pattern.
+```bash
+yarn ass sms1-ir
+```
 
-patternId: The ID of the pattern to use for the SMS.
-recipient: The recipient's phone number.
-pairs: The key-value pairs to replace in the pattern.
-Returns a promise that resolves with the API response data.
-Private Methods
-sendWithRetry(message: string, recipient: string, retries: number = 0): Promise<IData>
-Sends an SMS message with retry support.
+## Using
 
-message: The message content.
-recipient: The recipient's phone number.
-retries: The number of retry attempts (default is 0).
-Returns a promise that resolves with the API response data.
+To use this class in your Javascript or Typescript code, first import it:
+
+```javascript
+import { sms1ir } from "sms1-ir";
+```
+
+Then create a new instance of the sms1ir class using your SMS1.ir API key.
+
+```javascript
+const sms = new sms1ir = ("YOUR_COMMON_API_KEY", "YOUR_PATTERN_API_KEY");
+```
+
+Then you can use the methods of the sms1ir class to interact with the SMS1.ir API. For example, to send a single SMS message to a single recipient:
+
+```javascript
+sms.send("Hi Sir!", "RECIPIENT_MOBILE_NUMBER");
 ```
