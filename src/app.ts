@@ -5,6 +5,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const apiKey = process.env.API_KEY;
 const sampleMobile = process.env.SAMPLE_MOBILE;
+const sampleMobile2 = process.env.SAMPLE_MOBILE2;
+const sampleMobile3 = process.env.SAMPLE_MOBILE3;
 
 interface IData {
 	status: number;
@@ -70,6 +72,18 @@ export class Sms1ir {
 			throw new Error("Failed to send SMS");
 		}
 	}
+
+	async bulkSend(message: string, recipient: string[]) {
+		try {
+			const responses = await Promise.all(
+				recipient.map((el) => this.send(message, el))
+			);
+			return responses;
+		} catch (error) {
+			console.error("Error sending bulk SMS:", error);
+			throw new Error("Failed to send bulk SMS");
+		}
+	}
 }
 
 // app.use(express.json());
@@ -80,7 +94,12 @@ app.post("/sms", async (req: Request, res: Response) => {
 		console.log("payload: ", payload);
 
 		const sms = new Sms1ir(apiKey!);
-		const sms1 = await sms.send("Hello World!", sampleMobile!);
+		// const sms1 = await sms.send("Hello World!", sampleMobile!);
+		const sms1 = await sms.bulkSend("Hello World!", [
+			sampleMobile!,
+			sampleMobile2!,
+			sampleMobile3!,
+		]);
 
 		res.json({ response: sms1 });
 	} catch (error) {
