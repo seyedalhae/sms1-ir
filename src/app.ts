@@ -17,6 +17,8 @@ interface IData {
 export class Sms1ir {
 	private apiKey: string;
 	private apiUrl: string = "https://app.sms1.ir:7001/api/service/";
+	private maxRetries: number = 3;
+	private retryInterval: number = 1000;
 
 	constructor(apiKey: string) {
 		this.apiKey = apiKey;
@@ -84,6 +86,49 @@ export class Sms1ir {
 			throw new Error("Failed to send bulk SMS");
 		}
 	}
+
+	async sendVerificationCode(verificationCode: string, recipient: string) {
+		const message = `Your verification code is: ${verificationCode}`;
+		try {
+			const responseBody = await this.send(message, recipient);
+			return responseBody;
+		} catch (error) {
+			console.error("Error sending verification code:", error);
+			throw new Error("Failed to send verification code");
+		}
+	}
+
+	private async sendWithRetry(
+		message: string,
+		recipient: string,
+		retries: number = 0
+	) {
+		try {
+			const responseBody = await this.Api("send", "POST", {
+				message,
+				recipient,
+			});
+			return responseBody;
+		} catch (error) {
+			console.error(`Error sending SMS to ${recipient}:`, error);
+			if (retries < this.maxRetries) {
+				console.log(
+					`Retrying SMS to ${recipient} (retry ${retries + 1} of ${
+						this.maxRetries
+					})`
+				);
+				await new Promise((resolve) =>
+					setTimeout(resolve, this.retryInterval)
+				);
+				return this.sendWithRetry(message, recipient, retries + 1);
+			} else {
+				console.error(
+					`Failed to send SMS to ${recipient} after ${this.maxRetries} retries`
+				);
+				throw new Error("Failed to send SMS");
+			}
+		}
+	}
 }
 
 // app.use(express.json());
@@ -94,13 +139,14 @@ app.post("/sms", async (req: Request, res: Response) => {
 		console.log("payload: ", payload);
 
 		const sms = new Sms1ir(apiKey!);
-		// const sms1 = await sms.send("Hello World!", sampleMobile!);
-		const sms1 = await sms.bulkSend("Hello World!", [
-			sampleMobile!,
-			sampleMobile2!,
-			sampleMobile3!,
-		]);
+		// const sms1 = await sms.send("Hello World!", sampleMobile3!);
+		// const sms1 = await sms.bulkSend("Hello World!", [
+		// 	sampleMobile!,
+		// 	sampleMobile2!,
+		// 	sampleMobile3!,
+		// ]);
 
+		const sms1 = await sms.sendVerificationCode("12323", sampleMobile!);
 		res.json({ response: sms1 });
 	} catch (error) {
 		console.error("Error in /users route:", error);
