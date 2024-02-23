@@ -1,6 +1,6 @@
 # SMS1.ir API
 
-`sms1-ir` allows you to communicate with the SMS1.ir API to send SMS messages. The API key for your SMS1.ir accounts is required to create a new instance of the sms1ir class.
+`sms1-ir` allows you to communicate with the SMS1.ir API to send SMS messages. The API key for your SMS1.ir accounts is required to create a new instance of the `Sms1ir` class.
 
 ## Installation
 
@@ -15,7 +15,7 @@ npm install sms1-ir
 With yarn:
 
 ```bash
-yarn ass sms1-ir
+yarn add sms1-ir
 ```
 
 ## Using
@@ -23,16 +23,16 @@ yarn ass sms1-ir
 To use this class in your Javascript or Typescript code, first import it:
 
 ```javascript
-import { sms1ir } from "sms1-ir";
+import { Sms1ir } from "sms1-ir";
 ```
 
-Then create a new instance of the sms1ir class using your SMS1.ir API key.
+Then create a new instance of the Sms1ir class using your SMS1.ir API key.
 
 ```javascript
-const sms = new sms1ir = ("YOUR_COMMON_API_KEY", "YOUR_PATTERN_API_KEY");
+const sms = new Sms1ir = ("YOUR_COMMON_API_KEY", "YOUR_PATTERN_API_KEY");
 ```
 
-Then you can use the methods of the sms1ir class to interact with the SMS1.ir API. For example, to send a single SMS message to a single recipient:
+Then you can use the methods of the Sms1ir class to interact with the SMS1.ir API. For example, to send a single SMS message to a single recipient:
 
 ```javascript
 sms.send("Hi Sir!", "RECIPIENT_MOBILE_NUMBER");
