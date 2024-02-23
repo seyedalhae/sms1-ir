@@ -27,7 +27,7 @@
 	"bugs": "https://github.com/seyedalhae/sms1-ir",
 	"license": "MIT",
 	"source": "./src/sms1ir.ts",
-	"main": "index.js",
+	"main": "./dist/sms1ir.cjs",
 	"module": "./dist/sms1ir.cjs",
 	"types": "./dist/sms1ir.d.ts",
 	"typings": "./dist/sms1ir.d.ts",
