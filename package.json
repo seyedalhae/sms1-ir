@@ -16,8 +16,7 @@
 	"type": "module",
 	"repository": {
 		"url": "https://github.com/seyedalhae/sms1-ir.git",
-		"type": "git",
-		"directory": "/"
+		"type": "git"
 	},
 	"author": {
 		"name": "Alireza Haeri",

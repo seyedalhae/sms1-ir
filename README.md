@@ -29,7 +29,7 @@ import { Sms1ir } from "sms1-ir";
 Then create a new instance of the Sms1ir class using your SMS1.ir API key.
 
 ```javascript
-const sms = new Sms1ir = ("YOUR_COMMON_API_KEY", "YOUR_PATTERN_API_KEY");
+const sms = new Sms1ir("YOUR_COMMON_API_KEY", "YOUR_PATTERN_API_KEY");
 ```
 
 Then you can use the methods of the Sms1ir class to interact with the SMS1.ir API. For example, to send a single SMS message to a single recipient:
