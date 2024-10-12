@@ -35,9 +35,7 @@
 	"exports": {
 		".": {
 			"require": "./dist/sms1ir.cjs",
-			"default": "./dist/sms1ir.modern.js",
-			"import": "./dist/sms1ir.modern.js",
-			"types": "./dist/sms1ir.d.ts"
+			"default": "./dist/sms1ir.modern.js"
 		},
 		"./ts": "./src/sms1ir.ts",
 		"./package.json": "./package.json"
